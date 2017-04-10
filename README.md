@@ -11,6 +11,7 @@ or
 
 
 ```
+pip install -r requirements.txt
 python sample_kinesis_wordputter.py
 ```
 
