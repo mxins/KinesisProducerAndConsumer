@@ -1,15 +1,21 @@
-<!-- Ant build script for compiling and running the Amazon Kinesis Sample Applications.
+﻿<!-- Ant build script for compiling and running the Amazon Kinesis Sample Applications.
      Don't forget to fill in your AWS access credentials in (~/.aws/credentials)
      before trying to run them. -->
 <project name="Amazon Kinesis Sample Applications" default="run-kinesis-consumer" basedir=".">
 	<!-- The Amazon Kinesis Client Library jar file is downloaded to the tmp directory. -->
 	<property name="tmpDir" value="${basedir}/tmp"/>
 	<property name="amazon.kinesis.client.version" value="1.7.4" />
-  <property name="aws.java.sdk.version" value="1.11.116" />
+  	<property name="aws.java.sdk.version" value="1.11.116" />
 	<property name="commons.lang.version" value="2.6" />
-  <property name="commons.logging.version" value="1.2" />
+  	<property name="commons.logging.version" value="1.2" />
 	<property name="guava.version" value="21.0" />
-  <property name="protobuf.java.version" value="3.2.0" /> 
+	<property name="protobuf.java.version" value="3.2.0" />
+	<property name="commons.codec.version" value="1.10" />
+	<property name="httpclient.version" value="4.5.3" />
+	<property name="httpcore.version" value="4.4.6" />
+	<property name="jackson.version" value="2.8.8" />
+	<property name="joda.time.version" value="2.9.9" />
+
   
 	<target name="run-kinesis-producer"
 			description="Run the Amazon Kinesis sample that sends records to a stream"
@@ -56,6 +62,7 @@
 
 	<target name="-fetch-amazon-kinesis-client-library">
 		<mkdir dir="${tmpDir}" />
+
 		<!-- Conditionally download the Amazon Kinesis Client Library for Java jar from Maven based on timestamp of local copy. -->
 		<get
 			src="http://repo1.maven.org/maven2/com/amazonaws/amazon-kinesis-client/${amazon.kinesis.client.version}/amazon-kinesis-client-${amazon.kinesis.client.version}.jar"
@@ -65,11 +72,7 @@
 			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/${aws.java.sdk.version}/aws-java-sdk-core-${aws.java.sdk.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 
-    	<get
-			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/${aws.java.sdk.version}/aws-java-sdk-bundle-${aws.java.sdk.version}.jar"
-			dest="${tmpDir}" usetimestamp="true" verbose="true" />
-      
-    	<get
+		<get
 			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/${aws.java.sdk.version}/aws-java-sdk-s3-${aws.java.sdk.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 
@@ -77,33 +80,64 @@
 			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-dynamodb/${aws.java.sdk.version}/aws-java-sdk-dynamodb-${aws.java.sdk.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 
-    	<get
+		<get
 			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-cloudwatch/${aws.java.sdk.version}/aws-java-sdk-cloudwatch-${aws.java.sdk.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
-      
-    	<get
-			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kinesis/${aws.java.sdk.version}/aws-java-sdk-kinesis-${aws.java.sdk.version}.jar"
-			dest="${tmpDir}" usetimestamp="true" verbose="true" />    
 
-    	<get
+		<get
+			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kinesis/${aws.java.sdk.version}/aws-java-sdk-kinesis-${aws.java.sdk.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
 			src="http://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kms/${aws.java.sdk.version}/aws-java-sdk-kms-${aws.java.sdk.version}.jar"
-			dest="${tmpDir}" usetimestamp="true" verbose="true" />     
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 
 		<get
 			src="http://repo1.maven.org/maven2/commons-lang/commons-lang/${commons.lang.version}/commons-lang-${commons.lang.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 
-    	<get
+		<get
 			src="http://repo1.maven.org/maven2/commons-logging/commons-logging/${commons.logging.version}/commons-logging-${commons.logging.version}.jar"
 			dest="${tmpDir}" usetimestamp="true" verbose="true" />
-      
-    	<get
-			src="http://repo1.maven.org/maven2/com/google/guava/guava/${guava.version}/guava-${guava.version}.jar"
-			dest="${tmpDir}" usetimestamp="true" verbose="true" />    
 
-    	<get
+		<get
+			src="http://repo1.maven.org/maven2/com/google/guava/guava/${guava.version}/guava-${guava.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
 			src="http://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/${protobuf.java.version}/protobuf-java-${protobuf.java.version}.jar"
-			dest="${tmpDir}" usetimestamp="true" verbose="true" />    
-      
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/commons-codec/commons-codec/${commons.codec.version}/commons-codec-${commons.codec.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/${httpclient.version}/httpclient-${httpclient.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/${httpcore.version}/httpcore-${httpcore.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/${jackson.version}/jackson-databind-${jackson.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/${jackson.version}/jackson-core-${jackson.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/${jackson.version}/jackson-annotations-${jackson.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/${jackson.version}/jackson-dataformat-cbor-${jackson.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
+
+		<get
+			src="http://repo1.maven.org/maven2/joda-time/joda-time/${joda.time.version}/joda-time-${joda.time.version}.jar"
+			dest="${tmpDir}" usetimestamp="true" verbose="true" />
 	</target>
 </project>
