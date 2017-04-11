@@ -15,7 +15,6 @@
 	<property name="httpcore.version" value="4.4.6" />
 	<property name="jackson.version" value="2.8.8" />
 	<property name="joda.time.version" value="2.9.9" />
-
   
 	<target name="run-kinesis-producer"
 			description="Run the Amazon Kinesis sample that sends records to a stream"
